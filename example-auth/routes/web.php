@@ -28,7 +28,12 @@ Route::get('/registration',[CustomAuthController::class,'registration'])->middle
 Route::post('/register-user',[CustomAuthController::class,'registerUser'])->name('register-user');
 
 //dasboard
-Route::get('/dashboard',[CustomAuthController::class,'dashboard'])->name('dashboard')->middleware('isLoggedIn');
+// Route::get('/dashboard',[CustomAuthController::class,'dashboard'])->name('dashboard')->middleware('isLoggedIn');
+
+Route::get('/dashboard1',[CustomAuthController::class,'dashboard'])->name('dashboard')->middleware('isLoggedIn');
+
 
 Route::get('/logout',[CustomAuthController::class,'logout']);
+
+Route::delete('/dashboard1/{id}',[CustomAuthController::class,'destroy'])->name('destroy');
 

@@ -46,12 +46,13 @@ class CustomAuthController extends Controller
             'password' => 'required|max:12|min:8',
         ]);
 
-        $user =  User::where('email', '=', $request->email)->first();
+        // $user =  User::where('email', '=', $request->email)->first();
+        $user =  User::all()->first();
         if ($user) {
-            if(Hash::check($request->password,$user->password)){
-                $request->session()->put('loginId',$user->id);
-                return redirect('dashboard');
-            }else{
+            if (Hash::check($request->password, $user->password)) {
+                $request->session()->put('loginId', $user->id);
+                return redirect('dashboard1');
+            } else {
                 return back()->with('fail', 'This Password is not matches');
             }
         } else {
@@ -60,18 +61,27 @@ class CustomAuthController extends Controller
     }
 
     //dashboard
-    public function dashboard(Request $request){
+    public function dashboard(Request $request)
+    {
         $data = array();
-        if(Session::has('loginId')){
-            $data = User::where('id', '=', Session::get('loginId'))->first();
+        if (Session::has('loginId')) {
+            // $data = User::where('id', '=', Session::get('loginId'))->first();
+            $data =  User::all()->first();
         }
-        return view('dashboard',compact('data'))->with('success','Login Success');
+        return view('dashboard1', compact('data'))->with('success', 'Login Success');
     }
     //logout
-    public function logout(){
-        if(Session::has('loginId')){
+    public function logout()
+    {
+        if (Session::has('loginId')) {
             Session::pull('loginId');
-            return redirect('login')->with('success','Logout Success!');
+            return redirect('login')->with('success', 'Logout Success!');
         }
+    }
+
+    public function destroy($id)
+    {
+        $data = User::where('id', $id)->delete();
+        return redirect()->route('dashboard', compact('data'))->with('success', 'Delete success');
     }
 }
